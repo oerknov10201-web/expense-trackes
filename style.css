@@ -1,0 +1,584 @@
+```css
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: Arial, sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #141e30,
+            #243b55
+        );
+
+    color: #222;
+
+    padding: 30px 15px;
+
+    transition:
+        background 0.35s ease,
+        color 0.35s ease;
+}
+
+
+.container {
+    width: 100%;
+    max-width: 650px;
+
+    margin: auto;
+}
+
+
+/* HEADER */
+
+header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    color: white;
+}
+
+header h1 {
+    margin: 0;
+
+    font-size: 32px;
+}
+
+header p {
+    margin-top: 6px;
+
+    opacity: 0.8;
+}
+
+
+/* THEME BUTTON */
+
+.theme-btn {
+    width: 45px;
+    height: 45px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    background: white;
+
+    transition:
+        transform 0.25s ease,
+        background 0.3s ease;
+}
+
+.theme-btn:hover {
+    transform: rotate(20deg) scale(1.08);
+}
+
+
+/* BALANCE */
+
+.balance-card {
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,0.2);
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+.balance-card p {
+    margin: 0;
+
+    color: #777;
+}
+
+.balance-card h2 {
+    margin: 10px 0 0;
+
+    font-size: 36px;
+
+    color: #243b55;
+}
+
+
+/* STATS */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+.stat {
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+    box-shadow:
+        0 8px 20px
+        rgba(0,0,0,0.15);
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+.stat span {
+    color: #777;
+}
+
+.stat strong {
+    font-size: 21px;
+}
+
+.income strong {
+    color: #159957;
+}
+
+.expense strong {
+    color: #e74c3c;
+}
+
+
+/* FORM */
+
+.form-card,
+.chart-card,
+.history {
+    background: white;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    margin-bottom: 15px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,0.15);
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+.form-card h2 {
+    margin-top: 0;
+}
+
+
+input {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 10px;
+
+    border: 2px solid #eee;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+
+    outline: none;
+
+    background: white;
+
+    color: #222;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        border 0.3s ease;
+}
+
+input:focus {
+    border-color: #667eea;
+}
+
+
+#add {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 12px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea,
+            #764ba2
+        );
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease;
+}
+
+#add:hover {
+    transform: translateY(-2px);
+}
+
+
+/* CHART */
+
+.section-title h2 {
+    margin: 0;
+}
+
+.section-title p {
+    color: #777;
+
+    margin-bottom: 20px;
+}
+
+
+.chart {
+    height: 230px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: end;
+
+    gap: 70px;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background: #f5f6fa;
+
+    transition:
+        background 0.3s ease;
+}
+
+
+.bar-box {
+    height: 190px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: end;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.bar {
+    width: 65px;
+
+    height: 10px;
+
+    border-radius:
+        10px 10px 0 0;
+
+    transition:
+        height 0.5s ease;
+}
+
+
+.income-bar {
+    background: #20bf6b;
+}
+
+.expense-bar {
+    background: #eb3b5a;
+}
+
+
+.bar-box span {
+    font-size: 14px;
+
+    color: #555;
+
+    transition:
+        color 0.3s ease;
+}
+
+
+/* HISTORY */
+
+.history-title {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.history-title h2 {
+    margin: 0;
+}
+
+
+#clear {
+    border: none;
+
+    background: #f1f2f6;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
+}
+
+
+#list {
+    list-style: none;
+
+    padding: 0;
+
+    margin-bottom: 0;
+}
+
+
+.transaction {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 14px;
+
+    margin-top: 10px;
+
+    border-radius: 12px;
+
+    background: #f7f7f7;
+
+    border-left: 5px solid;
+
+    transition:
+        background 0.3s ease;
+}
+
+
+.transaction.income-item {
+    border-color: #20bf6b;
+}
+
+.transaction.expense-item {
+    border-color: #eb3b5a;
+}
+
+
+.transaction-name {
+    font-weight: bold;
+}
+
+.transaction-amount {
+    font-weight: bold;
+}
+
+
+.delete-btn {
+    border: none;
+
+    background: #ffdddd;
+
+    color: #e74c3c;
+
+    padding: 7px 10px;
+
+    margin-left: 10px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+
+#empty {
+    text-align: center;
+
+    color: #999;
+
+    padding: 20px 0;
+}
+
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+
+    color: white;
+
+    opacity: 0.8;
+
+    padding: 10px;
+}
+
+
+/* ================================= */
+/* 🌙 DARK MODE */
+/* ================================= */
+
+body.dark {
+    background:
+        linear-gradient(
+            135deg,
+            #090d16,
+            #151b2b
+        );
+
+    color: #f1f1f1;
+}
+
+
+body.dark .balance-card,
+body.dark .stat,
+body.dark .form-card,
+body.dark .chart-card,
+body.dark .history {
+    background: #1d2433;
+
+    color: #f1f1f1;
+}
+
+
+body.dark .balance-card p,
+body.dark .stat span,
+body.dark .section-title p {
+    color: #aeb6c5;
+}
+
+
+body.dark .balance-card h2 {
+    color: #8ea2ff;
+}
+
+
+body.dark input {
+    background: #111827;
+
+    color: white;
+
+    border-color: #374151;
+}
+
+
+body.dark input::placeholder {
+    color: #7d8798;
+}
+
+
+body.dark .chart {
+    background: #111827;
+}
+
+
+body.dark .bar-box span {
+    color: #c4cad5;
+}
+
+
+body.dark #clear {
+    background: #303849;
+
+    color: #f1f1f1;
+}
+
+
+body.dark .transaction {
+    background: #151c2b;
+}
+
+
+body.dark .theme-btn {
+    background: #273146;
+
+    color: white;
+}
+
+
+/* TELEFON */
+
+@media (max-width: 500px) {
+
+    body {
+        padding: 15px 10px;
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+
+    .stats {
+        grid-template-columns:
+            1fr;
+    }
+
+    .balance-card h2 {
+        font-size: 29px;
+    }
+
+    .chart {
+        gap: 45px;
+    }
+
+    .bar {
+        width: 55px;
+    }
+
+}
+```
