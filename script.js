@@ -1,4 +1,3 @@
-```javascript
 const text = document.getElementById("text");
 const amount = document.getElementById("amount");
 
@@ -377,4 +376,3 @@ if (savedTheme === "dark") {
 // BOSHLANG'ICH HOLAT
 
 updateUI();
-```
