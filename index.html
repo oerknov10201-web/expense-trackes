@@ -3,154 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>MyMoney — Xarajat Hisoblagich</title>
-
+    <title>Block Blast</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="container">
-
-    <header>
-        <div>
-            <h1>💰 MyMoney</h1>
-            <p>Shaxsiy moliyangizni boshqaring</p>
-        </div>
-
-        <button id="themeBtn" class="theme-btn">🌙</button>
-    </header>
-
-
-    <!-- BALANS -->
-
-    <section class="balance-card">
-
-        <p>Umumiy balans</p>
-
-        <h2 id="total">0 so'm</h2>
-
-    </section>
-
-
-    <!-- STATISTIKA -->
-
-    <section class="stats">
-
-        <div class="stat income">
-            <span>📈 Daromad</span>
-            <strong id="income">0 so'm</strong>
-        </div>
-
-        <div class="stat expense">
-            <span>📉 Xarajat</span>
-            <strong id="expense">0 so'm</strong>
-        </div>
-
-    </section>
-
-
-    <!-- QO'SHISH -->
-
-    <section class="form-card">
-
-        <h2>➕ Yangi operatsiya</h2>
-
-        <input
-            type="text"
-            id="text"
-            placeholder="Masalan: Maosh yoki Ovqat"
-        >
-
-        <input
-            type="number"
-            id="amount"
-            placeholder="+500000 yoki -50000"
-        >
-
-        <button id="add">
-            Qo'shish
-        </button>
-
-    </section>
-
-
-    <!-- GRAFIK -->
-
-    <section class="chart-card">
-
-        <div class="section-title">
-
+    <div class="game">
+        <div class="top">
             <div>
-                <h2>📊 Moliyaviy statistika</h2>
-                <p>Daromad va xarajatlaringiz</p>
+                <h1>🧱 Block Blast</h1>
+                <p>Bloklarni joylashtir va qatorlarni yo‘q qil!</p>
             </div>
 
-        </div>
-
-        <div class="chart">
-
-            <div class="bar-box">
-
-                <div
-                    id="incomeBar"
-                    class="bar income-bar"
-                ></div>
-
-                <span>Daromad</span>
-
+            <div class="score-box">
+                <span>REKORD</span>
+                <strong id="best">0</strong>
             </div>
-
-            <div class="bar-box">
-
-                <div
-                    id="expenseBar"
-                    class="bar expense-bar"
-                ></div>
-
-                <span>Xarajat</span>
-
-            </div>
-
         </div>
 
-    </section>
-
-
-    <!-- TARIX -->
-
-    <section class="history">
-
-        <div class="history-title">
-
-            <h2>📋 Operatsiyalar</h2>
-
-            <button id="clear">
-                🧹 Tozalash
-            </button>
-
+        <div class="score">
+            <span>OCHKO</span>
+            <strong id="score">0</strong>
         </div>
 
-        <ul id="list"></ul>
+        <div id="board" class="board"></div>
 
-        <p id="empty">
-            Hozircha operatsiyalar yo'q.
-        </p>
+        <div id="pieces" class="pieces"></div>
 
-    </section>
+        <button id="restart" class="restart">🔄 Qaytadan boshlash</button>
+    </div>
 
+    <div id="gameOver" class="game-over hidden">
+        <div class="game-over-box">
+            <div class="big-icon">💥</div>
+            <h2>O‘yin tugadi!</h2>
+            <p>Sizning ochkoingiz:</p>
+            <strong id="finalScore">0</strong>
+            <button id="playAgain">🎮 Qayta o‘ynash</button>
+        </div>
+    </div>
 
-    <!-- FOOTER -->
-
-    <footer>
-        <p>💚 MyMoney — barcha funksiyalar bepul</p>
-    </footer>
-
-</div>
-
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
