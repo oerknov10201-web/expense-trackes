@@ -1,378 +1,366 @@
-const text = document.getElementById("text");
-const amount = document.getElementById("amount");
+const board = document.getElementById("board");
+const piecesContainer = document.getElementById("pieces");
+const scoreElement = document.getElementById("score");
+const bestElement = document.getElementById("best");
+const restartButton = document.getElementById("restart");
 
-const addButton = document.getElementById("add");
+const gameOverScreen = document.getElementById("gameOver");
+const finalScore = document.getElementById("finalScore");
+const playAgain = document.getElementById("playAgain");
 
-const list = document.getElementById("list");
+const SIZE = 8;
 
-const total = document.getElementById("total");
+let grid = [];
+let score = 0;
+let best = Number(localStorage.getItem("blockBlastBest")) || 0;
 
-const incomeElement =
-    document.getElementById("income");
+bestElement.textContent = best;
 
-const expenseElement =
-    document.getElementById("expense");
+// Ranglar
+const colors = [
+    "#ff5c7a",
+    "#ff9f43",
+    "#ffd32a",
+    "#20bf6b",
+    "#2d98da",
+    "#8854d0",
+    "#00cec9"
+];
 
-const incomeBar =
-    document.getElementById("incomeBar");
+// Blok shakllari
+const shapes = [
+    [[1]],
 
-const expenseBar =
-    document.getElementById("expenseBar");
+    [[1, 1]],
 
-const clearButton =
-    document.getElementById("clear");
+    [[1, 1, 1]],
 
-const empty =
-    document.getElementById("empty");
+    [[1, 1, 1, 1]],
 
-const themeBtn =
-    document.getElementById("themeBtn");
+    [[1, 1],
+     [1, 1]],
 
+    [[1, 0],
+     [1, 1]],
 
-let transactions =
-    JSON.parse(
-        localStorage.getItem("transactions")
-    ) || [];
+    [[0, 1],
+     [1, 1]],
 
+    [[1, 1, 1],
+     [0, 1, 0]],
 
-// PULNI FORMATLASH
+    [[1, 1, 0],
+     [0, 1, 1]],
 
-function money(number) {
+    [[1, 1, 1],
+     [1, 0, 0]],
 
-    return number.toLocaleString("uz-UZ")
-        + " so'm";
+    [[1, 0, 0],
+     [1, 1, 1]],
 
+    [[1, 1],
+     [1, 0],
+     [1, 0]],
+
+    [[1, 0],
+     [1, 1],
+     [0, 1]]
+];
+
+let pieces = [];
+
+// O‘yinni boshlash
+function startGame() {
+    grid = Array.from({ length: SIZE }, () =>
+        Array(SIZE).fill(null)
+    );
+
+    score = 0;
+    scoreElement.textContent = score;
+
+    gameOverScreen.classList.add("hidden");
+
+    drawBoard();
+    createPieces();
 }
 
+// Doskani chizish
+function drawBoard() {
+    board.innerHTML = "";
 
-// SAYTNI YANGILASH
+    for (let row = 0; row < SIZE; row++) {
+        for (let col = 0; col < SIZE; col++) {
 
-function updateUI() {
+            const cell = document.createElement("div");
+            cell.className = "cell";
 
-    list.innerHTML = "";
-
-    let income = 0;
-
-    let expense = 0;
-
-
-    transactions.forEach(
-        (item, index) => {
-
-            if (item.amount >= 0) {
-
-                income += item.amount;
-
-            } else {
-
-                expense += Math.abs(
-                    item.amount
-                );
-
+            if (grid[row][col]) {
+                cell.classList.add("filled");
+                cell.style.background = grid[row][col];
             }
 
+            cell.dataset.row = row;
+            cell.dataset.col = col;
 
-            const li =
-                document.createElement("li");
+            board.appendChild(cell);
+        }
+    }
+}
 
-            li.classList.add(
-                "transaction"
-            );
+// Tasodifiy bloklar yaratish
+function createPieces() {
+    pieces = [];
 
+    piecesContainer.innerHTML = "";
 
-            if (item.amount >= 0) {
+    for (let i = 0; i < 3; i++) {
 
-                li.classList.add(
-                    "income-item"
-                );
+        const shape =
+            shapes[Math.floor(Math.random() * shapes.length)];
 
+        const color =
+            colors[Math.floor(Math.random() * colors.length)];
+
+        pieces.push({
+            shape: shape,
+            color: color
+        });
+
+        createPieceElement(shape, color, i);
+    }
+}
+
+// Pastdagi blokni chiqarish
+function createPieceElement(shape, color, index) {
+
+    const piece = document.createElement("div");
+    piece.className = "piece";
+
+    const miniGrid = document.createElement("div");
+    miniGrid.className = "mini-grid";
+
+    miniGrid.style.gridTemplateColumns =
+        `repeat(${shape[0].length}, 23px)`;
+
+    shape.forEach(row => {
+
+        row.forEach(value => {
+
+            const cell = document.createElement("div");
+            cell.className = "mini-cell";
+
+            if (value) {
+                cell.style.background = color;
             } else {
-
-                li.classList.add(
-                    "expense-item"
-                );
-
+                cell.style.visibility = "hidden";
             }
 
+            miniGrid.appendChild(cell);
+        });
+    });
 
-            li.innerHTML = `
+    piece.appendChild(miniGrid);
 
-                <div>
+    piece.addEventListener("click", () => {
+        selectPiece(index);
+    });
 
-                    <div class="transaction-name">
-                        ${item.text}
-                    </div>
-
-                    <div class="transaction-amount">
-
-                        ${
-                            item.amount >= 0
-                            ? "+"
-                            : ""
-                        }
-
-                        ${money(item.amount)}
-
-                    </div>
-
-                </div>
-
-
-                <button
-                    class="delete-btn"
-                    onclick="deleteTransaction(${index})"
-                >
-                    🗑️
-                </button>
-
-            `;
-
-
-            list.appendChild(li);
-
-        }
-    );
-
-
-    const balance =
-        income - expense;
-
-
-    total.textContent =
-        money(balance);
-
-
-    incomeElement.textContent =
-        money(income);
-
-
-    expenseElement.textContent =
-        money(expense);
-
-
-    // GRAFIK
-
-    const max =
-        Math.max(income, expense, 1);
-
-
-    const incomeHeight =
-        (income / max) * 170;
-
-
-    const expenseHeight =
-        (expense / max) * 170;
-
-
-    incomeBar.style.height =
-        Math.max(incomeHeight, 10)
-        + "px";
-
-
-    expenseBar.style.height =
-        Math.max(expenseHeight, 10)
-        + "px";
-
-
-    // BO'SH TARIX
-
-    if (transactions.length === 0) {
-
-        empty.style.display =
-            "block";
-
-    } else {
-
-        empty.style.display =
-            "none";
-
-    }
-
-
-    // SAQLASH
-
-    localStorage.setItem(
-        "transactions",
-        JSON.stringify(transactions)
-    );
-
+    piecesContainer.appendChild(piece);
 }
 
+// Blok tanlash
+function selectPiece(index) {
 
-// QO'SHISH
+    if (!pieces[index]) return;
 
-addButton.addEventListener(
-    "click",
-    function() {
+    const piece = pieces[index];
 
-        if (
-            text.value.trim() === ""
-            ||
-            amount.value === ""
-        ) {
+    const possible = findFirstPosition(piece.shape);
 
-            alert(
-                "Iltimos, barcha joylarni to'ldiring!"
-            );
-
-            return;
-
-        }
-
-
-        const item = {
-
-            text:
-                text.value.trim(),
-
-            amount:
-                Number(amount.value)
-
-        };
-
-
-        transactions.push(item);
-
-
-        text.value = "";
-
-        amount.value = "";
-
-
-        updateUI();
-
+    if (!possible) {
+        checkGameOver();
+        return;
     }
-);
 
-
-// ENTER BILAN QO'SHISH
-
-amount.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (event.key === "Enter") {
-
-            addButton.click();
-
-        }
-
-    }
-);
-
-
-// O'CHIRISH
-
-function deleteTransaction(index) {
-
-    transactions.splice(
-        index,
-        1
+    placePiece(
+        piece.shape,
+        piece.color,
+        possible.row,
+        possible.col
     );
 
-    updateUI();
+    pieces[index] = null;
 
+    const element = piecesContainer.children[index];
+
+    if (element) {
+        element.style.visibility = "hidden";
+    }
+
+    clearLines();
+
+    if (pieces.every(p => p === null)) {
+        setTimeout(createPieces, 250);
+    }
+
+    checkGameOver();
 }
 
+// Birinchi mos joyni topish
+function findFirstPosition(shape) {
 
-// HAMMASINI TOZALASH
+    for (let row = 0; row < SIZE; row++) {
 
-clearButton.addEventListener(
-    "click",
-    function() {
+        for (let col = 0; col < SIZE; col++) {
 
-        if (
-            transactions.length === 0
-        ) {
-
-            return;
-
+            if (canPlace(shape, row, col)) {
+                return { row, col };
+            }
         }
-
-
-        const answer =
-            confirm(
-                "Barcha operatsiyalar o'chirilsinmi?"
-            );
-
-
-        if (answer) {
-
-            transactions = [];
-
-            updateUI();
-
-        }
-
     }
-);
 
+    return null;
+}
 
-// =====================================
-// 🌙 TUNGI / KUNDUZGI REJIM
-// =====================================
+// Joylashtirish mumkinmi?
+function canPlace(shape, startRow, startCol) {
 
-function setTheme(isDark) {
+    for (let r = 0; r < shape.length; r++) {
 
-    if (isDark) {
+        for (let c = 0; c < shape[r].length; c++) {
 
-        document.body.classList.add("dark");
+            if (!shape[r][c]) continue;
 
-        themeBtn.textContent = "☀️";
+            const row = startRow + r;
+            const col = startCol + c;
+
+            if (
+                row >= SIZE ||
+                col >= SIZE ||
+                grid[row][col]
+            ) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Blokni joylashtirish
+function placePiece(shape, color, startRow, startCol) {
+
+    for (let r = 0; r < shape.length; r++) {
+
+        for (let c = 0; c < shape[r].length; c++) {
+
+            if (shape[r][c]) {
+                grid[startRow + r][startCol + c] = color;
+                score += 10;
+            }
+        }
+    }
+
+    updateScore();
+    drawBoard();
+}
+
+// To‘liq qator va ustunlarni o‘chirish
+function clearLines() {
+
+    let cleared = 0;
+
+    // Qatorlar
+    for (let row = SIZE - 1; row >= 0; row--) {
+
+        if (grid[row].every(cell => cell !== null)) {
+
+            grid.splice(row, 1);
+            grid.unshift(Array(SIZE).fill(null));
+
+            cleared++;
+            row++;
+        }
+    }
+
+    // Ustunlar
+    for (let col = SIZE - 1; col >= 0; col--) {
+
+        let full = true;
+
+        for (let row = 0; row < SIZE; row++) {
+            if (!grid[row][col]) {
+                full = false;
+                break;
+            }
+        }
+
+        if (full) {
+
+            for (let row = 0; row < SIZE; row++) {
+                grid[row][col] = null;
+            }
+
+            cleared++;
+        }
+    }
+
+    if (cleared > 0) {
+
+        score += cleared * 100;
+
+        if (cleared >= 2) {
+            score += cleared * 50;
+        }
+
+        updateScore();
+        drawBoard();
+    }
+}
+
+// Ochko
+function updateScore() {
+
+    scoreElement.textContent = score;
+
+    if (score > best) {
+        best = score;
+        bestElement.textContent = best;
 
         localStorage.setItem(
-            "theme",
-            "dark"
+            "blockBlastBest",
+            best
         );
-
-    } else {
-
-        document.body.classList.remove("dark");
-
-        themeBtn.textContent = "🌙";
-
-        localStorage.setItem(
-            "theme",
-            "light"
-        );
-
     }
-
 }
 
+// O‘yin tugaganini tekshirish
+function checkGameOver() {
 
-// KNOPKANI BOSISH
+    const availablePieces =
+        pieces.filter(piece => piece !== null);
 
-themeBtn.addEventListener(
-    "click",
-    function() {
+    if (availablePieces.length === 0) return;
 
-        const isDark =
-            document.body.classList.contains("dark");
+    for (const piece of availablePieces) {
 
-        setTheme(!isDark);
-
+        if (findFirstPosition(piece.shape)) {
+            return;
+        }
     }
-);
 
+    setTimeout(() => {
 
-// OLDINGI REJIMNI TEKSHIRISH
+        finalScore.textContent = score;
+        gameOverScreen.classList.remove("hidden");
 
-const savedTheme =
-    localStorage.getItem("theme");
-
-
-if (savedTheme === "dark") {
-
-    setTheme(true);
-
-} else {
-
-    setTheme(false);
-
+    }, 200);
 }
 
+// Qayta boshlash
+restartButton.addEventListener("click", startGame);
 
-// BOSHLANG'ICH HOLAT
+playAgain.addEventListener("click", startGame);
 
-updateUI();
+// Boshlash
+startGame();
